@@ -1,0 +1,5 @@
+{
+    "name": "Waze Travel Time Distance Filtered",
+    "render_readme": true,
+    "domains": ["sensor"]
+}
