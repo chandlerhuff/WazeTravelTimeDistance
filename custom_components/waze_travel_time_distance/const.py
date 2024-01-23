@@ -1,7 +1,7 @@
 """Constants for waze_travel_time."""
 from __future__ import annotations
 
-DOMAIN = "waze_travel_time"
+DOMAIN = "waze_travel_time_distance"
 SEMAPHORE = "semaphore"
 
 CONF_DESTINATION = "destination"
@@ -16,7 +16,7 @@ CONF_AVOID_TOLL_ROADS = "avoid_toll_roads"
 CONF_AVOID_SUBSCRIPTION_ROADS = "avoid_subscription_roads"
 CONF_AVOID_FERRIES = "avoid_ferries"
 
-DEFAULT_NAME = "Waze Travel Time"
+DEFAULT_NAME = "Waze Travel Time Distance Filtered"
 DEFAULT_REALTIME = True
 DEFAULT_VEHICLE_TYPE = "car"
 DEFAULT_AVOID_TOLL_ROADS = False
