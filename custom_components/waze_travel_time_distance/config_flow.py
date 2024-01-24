@@ -88,7 +88,7 @@ def default_options(hass: HomeAssistant) -> dict[str, str | bool]:
     return defaults
 
 
-class WazeOptionsFlow(config_entries.OptionsFlow):
+class WazeDistanceOptionsFlow(config_entries.OptionsFlow):
     """Handle an options flow for Waze Travel Time."""
 
     def __init__(self, config_entry: config_entries.ConfigEntry) -> None:
@@ -120,9 +120,9 @@ class ConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
     @callback
     def async_get_options_flow(
         config_entry: config_entries.ConfigEntry,
-    ) -> WazeOptionsFlow:
+    ) -> WazeDistanceOptionsFlow:
         """Get the options flow for this handler."""
-        return WazeOptionsFlow(config_entry)
+        return WazeDistanceOptionsFlow(config_entry)
 
     async def async_step_user(self, user_input=None) -> FlowResult:
         """Handle the initial step."""

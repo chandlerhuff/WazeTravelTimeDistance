@@ -67,18 +67,18 @@ async def async_setup_entry(
     region = config_entry.data[CONF_REGION]
     name = config_entry.data.get(CONF_NAME, DEFAULT_NAME)
 
-    data = WazeTravelTimeData(
+    data = WazeTravelTimeDistanceData(
         region,
         get_async_client(hass),
         config_entry,
     )
 
-    sensor = WazeTravelTime(config_entry.entry_id, name, origin, destination, data)
+    sensor = WazeTravelTimeDistance(config_entry.entry_id, name, origin, destination, data)
 
     async_add_entities([sensor], False)
 
 
-class WazeTravelTime(SensorEntity):
+class WazeTravelTimeDistance(SensorEntity):
     """Representation of a Waze travel time sensor."""
 
     _attr_attribution = "Powered by Waze"
@@ -98,7 +98,7 @@ class WazeTravelTime(SensorEntity):
         name: str,
         origin: str,
         destination: str,
-        waze_data: WazeTravelTimeData,
+        waze_data: WazeTravelTimeDistanceData,
     ) -> None:
         """Initialize the Waze travel time sensor."""
         self._attr_unique_id = unique_id
@@ -158,8 +158,8 @@ class WazeTravelTime(SensorEntity):
             self.hass.data[DOMAIN][SEMAPHORE].release()
 
 
-class WazeTravelTimeData:
-    """WazeTravelTime Data object."""
+class WazeTravelTimeDistanceData:
+    """WazeTravelTimeDistance Data object."""
 
     def __init__(
         self, region: str, client: httpx.AsyncClient, config_entry: ConfigEntry
