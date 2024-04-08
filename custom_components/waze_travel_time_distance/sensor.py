@@ -197,7 +197,7 @@ class WazeTravelTimeDistanceData:
 
             routes = {}
             try:
-                routes = await self.client.calc_all_routes_info(
+                routes = await self.client.calc_routes(
                     self.origin,
                     self.destination,
                     vehicle_type=vehicle_type,
@@ -205,36 +205,44 @@ class WazeTravelTimeDistanceData:
                     avoid_subscription_roads=avoid_subscription_roads,
                     avoid_ferries=avoid_ferries,
                     real_time=realtime,
+                    alternatives=3,
                 )
 
                 if incl_filter not in {None, ""}:
-                    routes = {
-                        k: v
-                        for k, v in routes.items()
-                        if incl_filter.lower() in k.lower()
-                    }
+                    routes = [
+                        r
+                        for r in routes
+                        if any(
+                            incl_filter.lower() == street_name.lower()
+                            for street_name in r.street_names
+                        )
+                    ]
 
                 if excl_filter not in {None, ""}:
-                    routes = {
-                        k: v
-                        for k, v in routes.items()
-                        if excl_filter.lower() not in k.lower()
-                    }
+                    routes = [
+                        r
+                        for r in routes
+                        if not any(
+                            excl_filter.lower() == street_name.lower()
+                            for street_name in r.street_names
+                        )
+                    ]
                     
                 if distance_filter not in {None, ""}:
-                    routes = {
-                        k: v
-                        for k, v in routes.items()
-                        if v[1] < float(distance_filter)
-                    }
+                    routes = [
+                        r
+                        for r in routes
+                        if r.distance < float(distance_filter)
+                    ]
 
-                if routes:
-                    route = list(routes)[0]
-                else:
+                if len(routes) < 1:
                     _LOGGER.warning("No routes found")
                     return
+                
+                route = routes[0]
 
-                self.duration, distance = routes[route]
+                self.duration = route.duration
+                distance = route.distance
 
                 if units == IMPERIAL_UNITS:
                     # Convert to miles.
@@ -244,10 +252,7 @@ class WazeTravelTimeDistanceData:
                 else:
                     self.distance = distance
 
-                self.route = route
+                self.route = route.name
             except WRCError as exp:
                 _LOGGER.warning("Error on retrieving data: %s", exp)
-                return
-            except KeyError:
-                _LOGGER.error("Error retrieving data from server")
                 return
