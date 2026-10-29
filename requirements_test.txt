@@ -1,0 +1,4 @@
+# This fixture release pins Home Assistant 2026.10.4.
+pytest-homeassistant-custom-component==0.13.375
+pywaze==1.2.4
+ruff==0.17.3

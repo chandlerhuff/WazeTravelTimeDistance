@@ -1,18 +1,16 @@
 {
-  "title": "Waze Travel Time Distance Filtered",
   "config": {
     "abort": {
-      "already_configured": "[%key:common::config_flow::abort::already_configured_location%]",
-      "reconfigure_successful": "[%key:common::config_flow::abort::reconfigure_successful%]"
+      "already_configured": "This location is already configured"
     },
     "error": {
-      "cannot_connect": "[%key:common::config_flow::error::cannot_connect%]"
+      "cannot_connect": "Failed to connect"
     },
     "step": {
       "user": {
         "data": {
           "destination": "Destination",
-          "name": "[%key:common::config_flow::data::name%]",
+          "name": "Name",
           "origin": "Origin",
           "region": "Region"
         },
@@ -23,18 +21,24 @@
   "options": {
     "step": {
       "init": {
-        "description": "Some options will allow you to force the integration to use a particular route or avoid a particular route in its time travel calculation.",
         "data": {
           "avoid_ferries": "Avoid ferries?",
           "avoid_subscription_roads": "Avoid roads needing a vignette / subscription?",
           "avoid_toll_roads": "Avoid toll roads?",
-          "excl_filter": "Street name which must NOT be part of the selected route",
-          "incl_filter": "Street name which must be part of the selected route",
-          "distance_filter": "Maximum distance of selected route (km)",
+          "base_coordinates": "Base coordinates",
+          "excl_filter": "Exact street name which must NOT be part of the selected route",
+          "incl_filter": "Exact street name which must be part of the selected route",
           "realtime": "Realtime travel time?",
+          "time_delta": "Time delta",
           "units": "Units",
-          "vehicle_type": "Vehicle type"
-        }
+          "vehicle_type": "Vehicle type",
+          "distance_filter": "Maximum distance of selected route (km)"
+        },
+        "data_description": {
+          "base_coordinates": "When Waze finds multiple matching locations for an address, it selects the one closest to these coordinates.",
+          "distance_filter": "Only routes strictly shorter than this distance in kilometers are selected, even when Units is set to Imperial. Leave blank to disable."
+        },
+        "description": "Some options will allow you to force the integration to use a particular route or avoid a particular route in its time travel calculation."
       }
     }
   },
@@ -78,20 +82,20 @@
           "description": "Whether to avoid toll roads.",
           "name": "Avoid toll roads?"
         },
+        "base_coordinates": {
+          "description": "When Waze finds multiple matching locations for an address, it selects the one closest to these coordinates.",
+          "name": "Base coordinates"
+        },
         "destination": {
           "description": "The destination of the route.",
           "name": "Destination"
         },
-        "distance_filter": {
-          "description": "Maximum distance for route filtering (in km).",
-          "name": "Maximum distance filter"
-        },
         "excl_filter": {
-          "description": "Street name which must NOT be part of the selected route.",
+          "description": "Exact street name which must NOT be part of the selected route",
           "name": "Streets to exclude"
         },
         "incl_filter": {
-          "description": "Street name which must be part of the selected route.",
+          "description": "Exact street name which must be part of the selected route",
           "name": "Streets to include"
         },
         "origin": {
@@ -106,6 +110,10 @@
           "description": "The region. Controls which Waze server is used.",
           "name": "Region"
         },
+        "time_delta": {
+          "description": "Time offset from now to calculate the route for. Positive values are in the future, negative values are in the past.",
+          "name": "Time delta"
+        },
         "units": {
           "description": "Which unit system to use.",
           "name": "Units"
@@ -113,9 +121,25 @@
         "vehicle_type": {
           "description": "Which vehicle to use.",
           "name": "Vehicle type"
+        },
+        "distance_filter": {
+          "name": "Maximum distance filter",
+          "description": "Only include routes strictly shorter than this limit in kilometers. Leave blank to disable."
         }
       },
       "name": "Get travel times"
+    }
+  },
+  "title": "Waze Travel Time Distance Filtered",
+  "exceptions": {
+    "update_error": {
+      "message": "Error retrieving data from Waze"
+    },
+    "connection_error": {
+      "message": "Unable to connect to Waze"
+    },
+    "unknown_origin_or_destination": {
+      "message": "Unable to determine origin or destination"
     }
   }
 }
